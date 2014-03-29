@@ -33,7 +33,7 @@
 ;; First download the latest CEDET distribution, provided in a
 ;; cedet-<VERSION>.tar.gz tarball, from the project page at:
 ;; <http://sf.net/projects/cedet>.
-;;
+;;  
 ;; Unpack the tarball in a directory of your choice.  It will install
 ;; the following directory tree:
 ;;
@@ -95,13 +95,13 @@
   `(
     ;;PACKAGE   MIN-VERSION      INSTALLDIR  DOCDIR
     (cedet         ,cedet-version "common"   "common" 	        )
-;;    (eieio         "1.4"           nil       "eieio"       )
+    (eieio         "1.4"           nil       "eieio"       )
     (semantic      "2.1"           nil       "semantic/doc")
-;;    (srecode       "1.1"           nil       "srecode"     )
-;;    (ede           "1.1"           nil       "ede"         )
+    (srecode       "1.1"           nil       "srecode"     ) 
+    (ede           "1.1"           nil       "ede"         )    
     (speedbar      "1.0.4"         nil       "speedbar"    )
-;;    (cogre         "1.1"           nil       "cogre"       )
-;;    (cedet-contrib "1.1"           "contrib" nil           )
+    (cogre         "1.1"           nil       "cogre"       )
+    (cedet-contrib "1.1"           "contrib" nil           )
     )
   "Table of CEDET packages to install.")
 
@@ -120,13 +120,13 @@ load CEDET at the beginning of your init file to avoid this." eieio-version))
 (let ((default-directory
         (file-name-directory
          (or load-file-name (buffer-file-name)))))
-
+  
   ;; Add "<INSTALL-DIR>/cedet/common" to `load-path'.
   (add-to-list 'load-path default-directory)
   ;;(message "%S added to `load-path'" default-directory)
   ;; Require the inversion library.
   (require 'inversion)
-
+  
   ;; Require specific Emacs versions
   (inversion-require-emacs cedet-emacs-min-version
 			   cedet-xemacs-min-version
@@ -152,7 +152,7 @@ load CEDET at the beginning of your init file to avoid this." eieio-version))
       (when docdir
 	(let ((fulldocpath (expand-file-name docdir default-directory)))
 	  ;; Set up one of the info paths depending on if info is
-	  ;; loaded yet.
+	  ;; loaded yet.	  
 	  (if (featurep 'info)
 	      (progn
 		(condition-case nil ; Not all emacs versions have this.
