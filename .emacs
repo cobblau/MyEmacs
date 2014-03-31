@@ -13,43 +13,26 @@
 (require 'auto-complete-clang)
 (add-to-list 'ac-dictionary-directories "/home/cobbliu/.emacs.d/site-lisp/ac-dict")
 (global-auto-complete-mode t)
-(ac-config-default)
 (define-key ac-completing-map (kbd "C-n") 'ac-next)
 (define-key ac-completing-map (kbd "C-p") 'ac-previous)
-(defun my-ac-config ()
-  (setq ac-clang-flags
-        (mapcar(lambda (item)(concat "-I" item))
-               (split-string
-                "
- /usr/include/c++/4.6
- /usr/lib/gcc/i686-linux-gnu/4.6/include
- /usr/local/include
- /usr/lib/gcc/i686-linux-gnu/4.6/include-fixed
- /usr/include/i386-linux-gnu/gnu
- /usr/include
-"
-)))
-  (setq-default ac-sources '(ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
-  (add-hook 'emacs-lisp-mode-hook 'ac-emacs-lisp-mode-setup)
-  (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
-  (add-hook 'auto-complete-mode-hook 'ac-common-setup))
-(defun my-ac-cc-mode-setup ()
-  (setq ac-sources (append '(ac-source-clang ac-source-yasnippet) ac-sources)))
-(add-hook 'c-mode-common-hook 'my-ac-cc-mode-setup)
-(my-ac-config)
-(ac-config-default)
 
 
 ;; ====================== cedet =========================
-;;(load-file "/home/cobbliu/.emacs.d/site-lisp/cedet-1.1/common/cedet.el")
-(require 'speedbar)
+(defun c-mode-cedet-hook()
+  (load-file "/home/cobbliu/.emacs.d/site-lisp/cedet-1.1/common/cedet.el")
+  (require 'speedbar)
+
+  ;; 删掉行尾的空格
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+)
+(add-hook 'c-mode-hook 'c-mode-cedet-hook)
 
 ;; ====================== sr-speedbar ======================
 ;; sr-speedbar是一个轻量级的代码树插件，可以在左侧查看代码树
 (require 'sr-speedbar)
 (setq sr-speedbar-left-side nil)
-(setq sr-speedbar-width 35)
-(setq sr-speedbar-max-width 35)
+(setq sr-speedbar-width 32)
+(setq sr-speedbar-max-width 32)
 (setq dframe-update-speed t)
 (global-set-key (kbd "<f5>") (lambda()
           (interactive)
@@ -78,7 +61,6 @@
                     :foreground "gray30")
 (set-face-attribute 'tabbar-selected nil
                     :inherit 'tabbar-default
-
                     :background "green"
                     :box '(:line-width 3 :color "DarkGoldenrod") )
 (set-face-attribute 'tabbar-unselected nil
@@ -129,16 +111,16 @@
 ;  global-fci-mode fci-mode (lambda () (fci-mode 1)))
 ;(global-fci-mode 1)
 
-;; 删掉行尾的空格
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; 关闭菜单栏
 (menu-bar-mode nil)
 (display-time)
 
-;; 删除 "filename~" 文件
+;; 默认工作目录
+(setq default-directory "~/alibaba/pharos2")
+
+;; 删除 "filename~" 和 "#filename#" 文件
 (setq backup-inhibited t)
-;; 删除 #filename# 文件
 (setq auto-save-default nil)
 
 ;; 高亮括号
