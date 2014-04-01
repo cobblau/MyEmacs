@@ -11,7 +11,7 @@
 (require 'auto-complete)
 (require 'auto-complete-config)
 (require 'auto-complete-clang)
-(add-to-list 'ac-dictionary-directories "/home/cobbliu/.emacs.d/site-lisp/ac-dict")
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/site-lisp/ac-dict")
 (global-auto-complete-mode t)
 (define-key ac-completing-map (kbd "C-n") 'ac-next)
 (define-key ac-completing-map (kbd "C-p") 'ac-previous)
@@ -19,7 +19,7 @@
 
 ;; ====================== cedet =========================
 (defun c-mode-cedet-hook()
-  (load-file "/home/cobbliu/.emacs.d/site-lisp/cedet-1.1/common/cedet.el")
+  (load-file "~/.emacs.d/site-lisp/cedet-1.1/common/cedet.el")
   (require 'speedbar)
 
   ;; 删掉行尾的空格
