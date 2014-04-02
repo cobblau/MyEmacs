@@ -17,15 +17,12 @@
 (define-key ac-completing-map (kbd "C-p") 'ac-previous)
 
 
-;; ====================== cedet =========================
-(defun c-mode-cedet-hook()
-  (load-file "~/.emacs.d/site-lisp/cedet-1.1/common/cedet.el")
-  (require 'speedbar)
-
+;; ====================== cmode only =======================
+(defun my-c-mode-hook()
   ;; 删掉行尾的空格
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 )
-(add-hook 'c-mode-hook 'c-mode-cedet-hook)
+(add-hook 'c-mode-hook 'my-c-mode-hook)
 
 ;; ====================== sr-speedbar ======================
 ;; sr-speedbar是一个轻量级的代码树插件，可以在左侧查看代码树
@@ -33,7 +30,6 @@
 (setq sr-speedbar-left-side nil)
 (setq sr-speedbar-width 32)
 (setq sr-speedbar-max-width 32)
-(setq dframe-update-speed t)
 (global-set-key (kbd "<f5>") (lambda()
           (interactive)
           (sr-speedbar-toggle)))
@@ -115,9 +111,6 @@
 ;; 关闭菜单栏
 (menu-bar-mode nil)
 (display-time)
-
-;; 默认工作目录
-(setq default-directory "~/alibaba/pharos2")
 
 ;; 删除 "filename~" 和 "#filename#" 文件
 (setq backup-inhibited t)
