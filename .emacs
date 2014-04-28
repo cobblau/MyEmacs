@@ -107,6 +107,10 @@
 ;  global-fci-mode fci-mode (lambda () (fci-mode 1)))
 ;(global-fci-mode 1)
 
+;; ========================= Go mode =======================
+(add-to-list 'load-path "~/.emacs.d/site-lisp/go")
+(require 'go-mode-load)
+(add-hook 'before-save-hook 'gofmt-before-save)
 
 ;; 关闭菜单栏
 (menu-bar-mode nil)
