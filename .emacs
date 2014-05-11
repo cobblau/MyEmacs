@@ -112,6 +112,12 @@
 (require 'go-mode-load)
 (add-hook 'before-save-hook 'gofmt-before-save)
 
+;; ========================= lua mode =======================
+(add-to-list 'load-path "~/.emacs.d/site-lisp/lua")
+(autoload 'lua-mode "lua-mode" "Lua editing mode." t)
+(add-to-list 'auto-mode-alist '("\\.lua$" . lua-mode))
+(add-to-list 'interpreter-mode-alist '("lua" . lua-mode))
+
 ;; 关闭菜单栏
 (menu-bar-mode nil)
 (display-time)
