@@ -156,10 +156,10 @@
 (global-set-key (kbd "M-r") 'replace-string)
 
 ;;highlight current line
-(global-hl-line-mode 1)
+;;(global-hl-line-mode 1)
 ;;(set-face-attribute hl-line-face nil :underline t)
-(set-face-attribute hl-line-face nil :background "black")
-(set-face-attribute hl-line-face nil :foreground "green")
+;;(set-face-attribute hl-line-face nil :background "black")
+;;(set-face-attribute hl-line-face nil :foreground "green")
 
 ;; 一些缩进设置
 (setq c-basic-offset 4)
