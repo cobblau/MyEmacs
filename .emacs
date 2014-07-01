@@ -6,6 +6,10 @@
 ;;(add-to-list 'load-path "/usr/share/emacs/site-lisp")
 (add-to-list 'load-path "~/.emacs.d/site-lisp")
 
+;; ======================= company mode ==================
+;;(add-to-list 'load-path "~/.emacs.d/site-lisp/company")
+;;(autoload 'company-mode "company" nil t)
+
 ;; ======================= auto-complete-config ============
 ;; auto-completion是一个代码自动补全工具
 (require 'auto-complete)
@@ -151,13 +155,14 @@
 ;; 字符替换
 (global-set-key (kbd "M-r") 'replace-string)
 
+;;highlight current line
+(global-hl-line-mode 1)
+;;(set-face-attribute hl-line-face nil :underline t)
+(set-face-attribute hl-line-face nil :background "black")
+(set-face-attribute hl-line-face nil :foreground "green")
+
 ;; 一些缩进设置
 (setq c-basic-offset 4)
 (setq default-tab-width 4)
 (setq-default indent-tabs-mode nil)
-(custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- )
+
