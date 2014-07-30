@@ -31,7 +31,7 @@
 ;; ====================== sr-speedbar ======================
 ;; sr-speedbar是一个轻量级的代码树插件，可以在左侧查看代码树
 (require 'sr-speedbar)
-(setq sr-speedbar-left-side nil)
+(setq sr-speedbar-left-side nil)  ;;右侧
 (setq sr-speedbar-width 32)
 (setq sr-speedbar-max-width 32)
 (global-set-key (kbd "<f5>") (lambda()
@@ -159,7 +159,7 @@
 ;;(global-hl-line-mode 1)
 ;;(set-face-attribute hl-line-face nil :underline t)
 ;;(set-face-attribute hl-line-face nil :background "black")
-;;(set-face-attribute hl-line-face nil :foreground "green")
+;;(set-face-attribute hl-line-face nil :foreground "#B2A6A6")
 
 ;; 一些缩进设置
 (setq c-basic-offset 4)
