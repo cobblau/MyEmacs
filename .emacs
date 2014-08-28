@@ -2,30 +2,39 @@
 (setq user-full-name "CobbLiu")
 (setq user-mail-address "cobblau@gmail.com")
 
+;; third party source
+(require 'package)
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
+(package-initialize)
+
 ;; 第三方库的路径
 ;;(add-to-list 'load-path "/usr/share/emacs/site-lisp")
 (add-to-list 'load-path "~/.emacs.d/site-lisp")
 
-;; ======================= company mode ==================
+;;======================  cl
+;; if not required, some error occur.
+(require 'cl)
+
+;; ==================== company mode
 ;;(add-to-list 'load-path "~/.emacs.d/site-lisp/company")
 ;;(autoload 'company-mode "company" nil t)
 
 ;; ======================= auto-complete-config ============
 ;; auto-completion是一个代码自动补全工具
-(require 'auto-complete)
-(require 'auto-complete-config)
-(require 'auto-complete-clang)
-(add-to-list 'ac-dictionary-directories "~/.emacs.d/site-lisp/ac-dict")
-(global-auto-complete-mode t)
-(define-key ac-completing-map (kbd "C-n") 'ac-next)
-(define-key ac-completing-map (kbd "C-p") 'ac-previous)
+;;(require 'auto-complete)
+;;(require 'auto-complete-config)
+;;(require 'auto-complete-clang)
+;;(add-to-list 'ac-dictionary-directories "~/.emacs.d/site-lisp/ac-dict")
+;;(global-auto-complete-mode t)
+;;(define-key ac-completing-map (kbd "C-n") 'ac-next)
+;;(define-key ac-completing-map (kbd "C-p") 'ac-previous)
 
 
 ;; ====================== cmode only =======================
 (defun my-c-mode-hook()
   ;; 删掉行尾的空格
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
-)
+  (add-hook 'before-save-hook 'delete-trailing-whitespace))
 (add-hook 'c-mode-hook 'my-c-mode-hook)
 
 ;; ====================== sr-speedbar ======================
@@ -46,7 +55,7 @@
 (global-set-key [(meta k)] 'tabbar-backward)
 (global-set-key [(meta p)] 'tabbar-forward-group)
 (global-set-key [(meta n)] 'tabbar-backward-group)
-; close default tabs
+;;close default tabs
 (setq tabbar-buffer-list-function
     (lambda ()
         (remove-if
@@ -79,10 +88,11 @@
 ;; ido可以在find-file或者switch-buffer的时候, 通过输入关键字自动筛选结果.
 (require 'ido)
 (ido-mode t)
-(setq ido-enable-flex-matching t) ;; enable fuzzy matching
+;; enable fuzzy matching
+(setq ido-enable-flex-matching t)
 
-;; ======================= cscope ==========================
-(require 'xcscope)
+;; ======================= cscope 
+;;(require 'xcscope)
 ;; C-c s a 设定初始化的目录，一般是你代码的根目录
 ;; C-s s I 对目录中的相关文件建立列表并进行索引
 ;; C-c s s 序找符号
@@ -92,14 +102,11 @@
 ;; C-c s e 寻找正则表达式
 ;; C-c s f 寻找文件
 ;; C-c s i 看看指定的文件被哪些文件include
-;;(add-hook 'c-mode-common-hook' (lambda()(require 'xcscope)))   ;;C only
-
-;; windmove makes window moving sufficient
-(windmove-default-keybindings)
-(windmove-default-keybindings 'meta)
+;; C only
+(add-hook 'c-mode-common-hook' (lambda()(require 'xcscope)))
 
 
-;; ========================= fill-column-indicator =========
+;; ==================== fill-column-indicator
 ;; 显示80行的标线
 (require 'fill-column-indicator)
 (setq fci-rule-width 2)
@@ -107,23 +114,52 @@
 (setq fci-rule-column 80)
 ;; avaiable in c source codes
 (add-hook 'c-mode-hook 'fci-mode)
-;(define-globalized-minor-mode
-;  global-fci-mode fci-mode (lambda () (fci-mode 1)))
-;(global-fci-mode 1)
+(define-globalized-minor-mode
+  global-fci-mode fci-mode (lambda () (fci-mode 1)))
+;;(global-fci-mode 1)
 
-;; ========================= Go mode =======================
-(add-to-list 'load-path "~/.emacs.d/site-lisp/go")
-(require 'go-mode-load)
-(add-hook 'before-save-hook 'gofmt-before-save)
+;; =================== HideShow Mode
+(add-hook 'c-mode-common-hook   'hs-minor-mode)
+(add-hook 'perl-mode-hook       'hs-minor-mode)
+(add-hook 'sh-mode-hook         'hs-minor-mode)
+(global-set-key (kbd "C-.") 'hs-toggle-hiding)
 
-;; ========================= lua mode =======================
-(add-to-list 'load-path "~/.emacs.d/site-lisp/lua")
-(autoload 'lua-mode "lua-mode" "Lua editing mode." t)
-(add-to-list 'auto-mode-alist '("\\.lua$" . lua-mode))
-(add-to-list 'interpreter-mode-alist '("lua" . lua-mode))
+;; ================== Company Mode
+(autoload 'company-mode "company" nil t)
+;;如果你嫌它补全的等待时间过长，可以设置为直接补全，并且设置其最小补全前缀为1(默认为3)
+(setq company-idle-delay 0)
+(setq company-minimum-prefix-length 1)
+
+(setq company-clang-arguments
+        (mapcar(lambda (item)(concat "-I" item))
+               (split-string
+      ;echo "" | g++ -v -x c++ -E -
+                "
+ /usr/lib/gcc/x86_64-linux-gnu/4.8/include
+ /usr/local/include
+ /usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed
+ /usr/include/x86_64-linux-gnu
+ /usr/include
+ .
+    ")))
+(global-company-mode t)
+;;company 颜色设置
+(defun theme-dark ()
+  (interactive)
+;;  (load-theme 'bclues t)
+  (set-face-foreground 'company-tooltip "#000")
+  (set-face-background 'company-tooltip "#fff")
+  (set-face-foreground 'company-scrollbar-bg "#fff")
+  (set-face-background 'company-scrollbar-fg "#999")
+;;  (set-face-foreground 'company-tooltip-selection "#aaa")
+;;  (set-face-background 'company-tooltip-common "#aaa")
+;;  (set-face-background 'company-tooltip-common-selection "#aaa") 
+;;  (set-face-background 'company-tooltip-annotation "#9a0000")
+)
+(theme-dark)
 
 ;; 关闭菜单栏
-(menu-bar-mode nil)
+(menu-bar-mode 0)
 (display-time)
 
 ;; 删除 "filename~" 和 "#filename#" 文件
@@ -154,12 +190,6 @@
 
 ;; 字符替换
 (global-set-key (kbd "M-r") 'replace-string)
-
-;;highlight current line
-;;(global-hl-line-mode 1)
-;;(set-face-attribute hl-line-face nil :underline t)
-;;(set-face-attribute hl-line-face nil :background "black")
-;;(set-face-attribute hl-line-face nil :foreground "#B2A6A6")
 
 ;; 一些缩进设置
 (setq c-basic-offset 4)
