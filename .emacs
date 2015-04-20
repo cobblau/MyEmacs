@@ -182,7 +182,8 @@
 (global-set-key (kbd "M-3") 'split-window-horizontally)
 (global-set-key (kbd "M-o") 'other-window)
 (global-set-key (kbd "C-^") 'enlarge-window)
-;(global-set-key (kbd "C-*") 'shrink-window)
+
+;; (global-set-key (kbd "C-*") 'shrink-window)
 (global-set-key (kbd "C-q") 'kill-ring-save)
 (global-set-key (kbd "C-{") 'backward-page)
 (global-set-key (kbd "C-}") 'forward-page)
