@@ -10,15 +10,12 @@
 
 ;; 第三方库的路径
 ;;(add-to-list 'load-path "/usr/share/emacs/site-lisp")
-(add-to-list 'load-path "~/.emacs.d/site-lisp")
+;;(add-to-list 'load-path "~/.emacs.d/site-lisp/")
 
 ;;======================  cl
 ;; if not required, some error occur.
 (require 'cl)
 
-;; ==================== company mode
-;;(add-to-list 'load-path "~/.emacs.d/site-lisp/company")
-;;(autoload 'company-mode "company" nil t)
 
 ;; ======================= auto-complete-config ============
 ;; auto-completion是一个代码自动补全工具
@@ -36,6 +33,8 @@
   ;; 删掉行尾的空格
   (add-hook 'before-save-hook 'delete-trailing-whitespace))
 (add-hook 'c-mode-hook 'my-c-mode-hook)
+;; call 'go fmt' before closing a go file
+(add-hook 'before-save-hook #'gofmt-before-save)
 
 ;; ====================== sr-speedbar ======================
 ;; sr-speedbar是一个轻量级的代码树插件，可以在左侧查看代码树
@@ -45,14 +44,14 @@
 (setq sr-speedbar-max-width 32)
 (global-set-key (kbd "<f5>") (lambda()
           (interactive)
-          (sr-speedbar-toggle)))
+          (sr-speedbar-open)))
 
 ;; ======================= tabbar ==========================
 ;; tabbar是在Emacs内部的一个标签页插件，可以方便地在标签页中切换源文件
 (require 'tabbar)
 (tabbar-mode 1)
-(global-set-key [(meta j)] 'tabbar-forward)
-(global-set-key [(meta k)] 'tabbar-backward)
+(global-set-key [(meta k)] 'tabbar-forward)
+(global-set-key [(meta j)] 'tabbar-backward)
 (global-set-key [(meta p)] 'tabbar-forward-group)
 (global-set-key [(meta n)] 'tabbar-backward-group)
 ;;close default tabs
@@ -103,7 +102,7 @@
 ;; C-c s f 寻找文件
 ;; C-c s i 看看指定的文件被哪些文件include
 ;; C only
-(add-hook 'c-mode-common-hook' (lambda()(require 'xcscope)))
+;;(add-hook 'c-mode-common-hook' (lambda()(require 'xcscope)))
 
 
 ;; ==================== fill-column-indicator
@@ -113,10 +112,10 @@
 (setq fci-rule-color "yellow")
 (setq fci-rule-column 80)
 ;; avaiable in c source codes
-(add-hook 'c-mode-hook 'fci-mode)
+;;(add-hook 'c-mode-hook 'fci-mode)
 (define-globalized-minor-mode
   global-fci-mode fci-mode (lambda () (fci-mode 1)))
-;;(global-fci-mode 1)
+;;(global-fci-mode 0)
 
 ;; =================== HideShow Mode
 (add-hook 'c-mode-common-hook   'hs-minor-mode)
@@ -158,6 +157,9 @@
 )
 (theme-dark)
 
+;; 编译的一些设置
+(global-set-key (kbd "M-m") 'compile)
+
 ;; 关闭菜单栏
 (menu-bar-mode 0)
 (display-time)
@@ -185,6 +187,14 @@
 (global-set-key (kbd "C-{") 'backward-page)
 (global-set-key (kbd "C-}") 'forward-page)
 
+;; Buffer 之间跳转的快捷键
+(global-set-key (kbd "C-x C-j") 'switch-to-prev-buffer)
+(global-set-key (kbd "C-x C-k") 'switch-to-next-buffer)
+
+;; 括号间跳转
+(global-set-key (kbd "C-M-n") 'forward-list)
+(global-set-key (kbd "C-M-p") 'backward-list)
+
 ;; 跳转到某行
 (global-set-key (kbd "M-g") 'goto-line)
 
@@ -193,6 +203,10 @@
 
 ;; 一些缩进设置
 (setq c-basic-offset 4)
-(setq default-tab-width 4)
+(setq default-tab-width 8)
 (setq-default indent-tabs-mode nil)
 
+;; fold-this mode 的一些设置
+(global-set-key (kbd "C-c C-f") 'fold-this-all)
+(global-set-key (kbd "C-c C-F") 'fold-this)
+(global-set-key (kbd "C-c M-f") 'fold-this-unfold-all)
