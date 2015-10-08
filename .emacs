@@ -16,11 +16,16 @@
 ;; if not required, some error occur.
 (require 'cl)
 
+;; go语言的自动补全设置                                                                                                                                                                                           
+;; 需要预先安装gocode到$PATH中：github.com/nsf/gocode                                                                                                                                                             
+(require 'go-complete)
+(require 'go-autocomplete)
 
 ;; ======================= auto-complete-config ============
 ;; auto-completion是一个代码自动补全工具
 ;;(require 'auto-complete)
-;;(require 'auto-complete-config)
+(require 'auto-complete-config)
+(ac-config-default)
 ;;(require 'auto-complete-clang)
 ;;(add-to-list 'ac-dictionary-directories "~/.emacs.d/site-lisp/ac-dict")
 ;;(global-auto-complete-mode t)
@@ -35,6 +40,7 @@
 (add-hook 'c-mode-hook 'my-c-mode-hook)
 ;; call 'go fmt' before closing a go file
 (add-hook 'before-save-hook #'gofmt-before-save)
+(add-hook 'completion-at-point-functions 'go-complete-at-point)
 
 ;; ====================== sr-speedbar ======================
 ;; sr-speedbar是一个轻量级的代码树插件，可以在左侧查看代码树
