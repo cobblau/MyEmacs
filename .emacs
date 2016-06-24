@@ -163,6 +163,20 @@
 )
 (theme-dark)
 
+;; gtags的一些设置
+(require 'gtags)
+(autoload 'gtags-mode "gtags" "" t)
+(add-hook 'c-mode-common-hook 'gtags-mode)
+(add-hook 'c++-mode-common-hook 'gtags-mode)
+(define-key gtags-mode-map (kbd "C-c v") 'gtags-find-rootdir)
+(define-key gtags-mode-map (kbd "C-c j") 'gtags-select-tag)
+(define-key gtags-mode-map (kbd "M-.") 'gtags-find-tag)
+(define-key gtags-mode-map (kbd "M-*") 'gtags-pop-stack)
+(define-key gtags-mode-map (kbd "C-c r") 'gtags-find-rtag)
+;;(global-set-key (kbd "C-j") 'gtags-select-tag)
+;;(global-set-key (kbd "M-.") 'gtags-find-tag)
+;;(global-set-key (kbd "M-*") 'gtags-pop-stack)
+
 ;; 编译的一些设置
 (global-set-key (kbd "M-m") 'compile)
 
