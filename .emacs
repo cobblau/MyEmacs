@@ -180,6 +180,9 @@
 ;; 编译的一些设置
 (global-set-key (kbd "M-m") 'compile)
 
+;; 显示当前光标在哪个函数中
+(which-function-mode 1)
+
 ;; 关闭菜单栏
 (menu-bar-mode 0)
 (display-time)
