@@ -53,6 +53,7 @@
  ;; 删掉行尾的空格
  (add-hook 'before-save-hook 'delete-trailing-whitespace))
 (add-hook 'c-mode-hook 'my-c-mode-hook)
+(add-hook 'c++-mode-hook 'my-c-mode-hook)
 ;;(add-hook 'before-save-hook #'gofmt-before-save)
 (add-hook 'completion-at-point-functions 'go-complete-at-point)
 
@@ -108,14 +109,14 @@
      (other . "gnu"))))
  '(company-backends
    (quote
-    (company-gtags company-dabbrev company-dabbrev-code company-files company-etags company-semantic company-keywords)))
+    ((company-gtags company-dabbrev company-dabbrev-code company-files company-semantic company-keywords company-irony company-etags))))
  '(custom-safe-themes
    (quote
     ("8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" default)))
  '(ecb-options-version "2.40")
  '(package-selected-packages
    (quote
-    (company-tern yasnippet company-irony irony company helm-gtags helm tabbar stickyfunc-enhance sr-speedbar solarized-theme moe-theme gtags auto-complete-c-headers)))
+    (multi-term diminish company-tern yasnippet company-irony irony company helm-gtags helm tabbar stickyfunc-enhance sr-speedbar solarized-theme moe-theme gtags auto-complete-c-headers)))
  '(speedbar-supported-extension-expressions
    (quote
     (".[ch]\\(\\+\\+\\|pp\\|c\\|h\\|xx\\)?" ".tex\\(i\\(nfo\\)?\\)?" ".el" ".emacs" ".l" ".lsp" ".p" ".java" ".js" ".f\\(90\\|77\\|or\\)?" ".ad[abs]" ".p[lm]" ".tcl" ".m" ".scm" ".pm" ".py" ".g" ".s?html" ".ma?k" "[Mm]akefile\\(\\.in\\)?" ".go")))
@@ -152,18 +153,23 @@
 (global-set-key (kbd "C-c C-r") 'helm-gtags-find-rtag)
 (global-set-key (kbd "C-j") 'helm-gtags-select-tag)
 ;; gtags自动更新
-(defun gtags-root-dir ()
-  "Returns GTAGS root directory or nil if doesn't exist."
-  (with-temp-buffer
-    (if (zerop (call-process "global" nil t nil "-pr"))
-        (buffer-substring (point-min) (1- (point-max)))
-      nil)))
-(defun gtags-update ()
-  "Make GTAGS incremental update"
-  (call-process "global" nil nil nil "-u"))
-(defun gtags-update-hook ()
-  (when (gtags-root-dir)
-    (gtags-update)))
+;; 代码来源：https://www.emacswiki.org/emacs/GnuGlobal
+(defun gtags-update-single(filename)
+  "Update Gtags database for changes in a single file"
+  (interactive)
+  (start-process "update-gtags" "update-gtags" "bash" "-c" (concat "cd " (gtags-root-dir) " ; gtags --single-update " filename )))
+(defun gtags-update-current-file()
+  (interactive)
+  (defvar filename)
+  (setq filename (replace-regexp-in-string (gtags-root-dir) "." (buffer-file-name (current-buffer))))
+  (gtags-update-single filename)
+  (message "Gtags updated for %s" filename))
+
+(defun gtags-update-hook()
+  "Update GTAGS file incrementally upon saving a file"
+  (when gtags-mode
+    (when (gtags-root-dir)
+      (gtags-update-current-file))))
 (add-hook 'after-save-hook #'gtags-update-hook)
 
 ;; (autoload 'gtags-mode "gtags" "" t)
@@ -189,6 +195,7 @@
 ;; (define-globalized-minor-mode
 ;;   global-fci-mode fci-mode (lambda () (fci-mode 1)))
 ;;(global-fci-mode 0)
+
 
 ;; =================== HideShow Mode
 (add-hook 'c-mode-common-hook   'hs-minor-mode)
@@ -277,6 +284,26 @@
   (setq global-hl-line-mode t)
 )
 (add-hook 'c++-mode-hook 'CobbCppHook)
+(add-hook 'c-mode-hook 'CobbCppHook)
+
+;; =================== Diminish
+(require 'diminish)
+(diminish 'abbrev-mode)
+(diminish 'company-mode)
+(diminish 'helm-mode)
+(diminish 'gtags-mode)
+(diminish 'helm-gtags-mode)
+(diminish 'hs-minor-mode)
+(diminish 'whitespace-mode)
+
+;; M-Del删除的单词不加入到剪切板
+(defun backward-delete-word (arg)
+    "Delete characters backward until encountering the beginning of a word.
+With argument ARG, do this that many times."
+    (interactive "p")
+    (delete-region (point) (progn (backward-word arg) (point))))
+(global-set-key (kbd "C-M-<backspace>") 'backward-kill-word)
+(global-set-key (kbd "M-DEL") 'backward-delete-word)
 
 ;; 一些窗口操作的快捷键
 (global-set-key (kbd "M-4") 'delete-window)
@@ -302,6 +329,7 @@
 
 ;; 字符替换
 (global-set-key (kbd "M-r") 'replace-string)
+(global-set-key (kbd "C-!") 'toggle-input-method)
 
 ;; 一些缩进设置
 (setq default-tab-width 4)
