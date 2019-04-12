@@ -1,11 +1,17 @@
-;; CobbLiu's emacs config file
+;;; package --- Summary
+;;; Commentary:
+;;; CobbLiu's  config file
+;;; Code:
 (setq user-full-name "CobbLiu")
 (setq user-mail-address "cobblau@gmail.com")
+(setq byte-compile-warnings nil)
 
 ;; third party source
 (require 'package)
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
+;;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+;;(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
+(add-to-list 'package-archives '("marmalade" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/marmalade/"))
+(add-to-list 'package-archives '("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))
 (package-initialize)
 
 ;; 第三方库的路径
@@ -116,7 +122,7 @@
  '(ecb-options-version "2.40")
  '(package-selected-packages
    (quote
-    (multi-term diminish company-tern yasnippet company-irony irony company helm-gtags helm tabbar stickyfunc-enhance sr-speedbar solarized-theme moe-theme gtags auto-complete-c-headers)))
+    (find-file-in-project multi-term diminish company-tern yasnippet company-irony irony company helm-gtags helm tabbar stickyfunc-enhance sr-speedbar solarized-theme moe-theme gtags auto-complete-c-headers)))
  '(speedbar-supported-extension-expressions
    (quote
     (".[ch]\\(\\+\\+\\|pp\\|c\\|h\\|xx\\)?" ".tex\\(i\\(nfo\\)?\\)?" ".el" ".emacs" ".l" ".lsp" ".p" ".java" ".js" ".f\\(90\\|77\\|or\\)?" ".ad[abs]" ".p[lm]" ".tcl" ".m" ".scm" ".pm" ".py" ".g" ".s?html" ".ma?k" "[Mm]akefile\\(\\.in\\)?" ".go")))
@@ -135,10 +141,18 @@
 ;; ======================= helm =====================
 (require 'helm-config)
 (helm-mode 1)
+(helm-autoresize-mode 1)
 (global-set-key (kbd "C-h C-l") 'helm-find-files)
-(global-set-key (kbd "C-h C-f") 'helm-find) ;; C-u C-h C-f 指定要搜索的目录
+;;(global-set-key (kbd "C-h C-f") 'helm-find) ;; C-u C-h C-f 指定要搜索的目录
 (global-set-key (kbd "C-h C-m") 'helm-imenu)
 (global-set-key (kbd "C-h C-o") 'helm-occur)
+(require 'find-file-in-project)
+;;(setq ffip-project-root "~/projs/PROJECT_DIR")
+;; M-x find-file-in-project-by-selected
+;; M-x find-file-in-project
+;; M-x find-file-in-project-at-point
+(global-set-key (kbd "C-h C-f") 'find-file-in-project)
+(global-set-key (kbd "C-h C-j") 'find-file-in-project-at-point)
 
 ;; ===================== gtags =====================
 (require 'gtags)
@@ -352,3 +366,6 @@ With argument ARG, do this that many times."
  ;; If there is more than one, they won't work right.
  '(flycheck-error ((t (:inherit error :background "yellow" :underline (:color "cyan" :style wave)))))
  '(which-func ((t (:foreground "cyan")))))
+
+(provide 'init)
+;;; init.el ends here
