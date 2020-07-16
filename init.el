@@ -146,13 +146,24 @@
 ;;(global-set-key (kbd "C-h C-f") 'helm-find) ;; C-u C-h C-f 指定要搜索的目录
 (global-set-key (kbd "C-h C-m") 'helm-imenu)
 (global-set-key (kbd "C-h C-o") 'helm-occur)
-(require 'find-file-in-project)
+;;(require 'find-file-in-project)
 ;;(setq ffip-project-root "~/projs/PROJECT_DIR")
 ;; M-x find-file-in-project-by-selected
 ;; M-x find-file-in-project
 ;; M-x find-file-in-project-at-point
-(global-set-key (kbd "C-h C-f") 'find-file-in-project)
-(global-set-key (kbd "C-h C-j") 'find-file-in-project-at-point)
+;;(global-set-key (kbd "C-h C-f") 'find-file-in-project)
+;;(global-set-key (kbd "C-h C-j") 'find-file-in-project-at-point)
+
+(require 'helm-projectile)
+(helm-projectile-on)
+(setq projectile-indexing-method 'native)
+;; (setq projectile-enable-caching t)
+(add-to-list 'projectile-globally-ignored-directories "third")
+(add-to-list 'projectile-globally-ignored-directories "build")
+(add-to-list 'projectile-globally-ignored-directories ".git")
+(global-set-key (kbd "C-h C-f") 'helm-projectile-find-file)
+(global-set-key (kbd "C-h C-d") 'helm-projectile-find-dir)
+(global-set-key (kbd "C-h C-p") 'helm-projectile-find-file-dwim)
 
 ;; ===================== gtags =====================
 (require 'gtags)
