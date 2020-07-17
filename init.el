@@ -47,6 +47,7 @@
 (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 (setq company-idle-delay 0)
 (setq company-minimum-prefix-length 2)
+(setq company-dabbrev-downcase nil)
 (add-to-list 'company-backends 'company-dabbrev)
 (add-to-list 'company-backends 'company-dabbrev-code)
 (add-to-list 'company-backends 'company-files)
