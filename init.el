@@ -35,24 +35,41 @@
 ;; (require 'yasnippet)
 ;; (yas-global-mode 1)
 
-;; ======================= auto-complete ============
-;; auto-completion是一个代码自动补全工具
-;; (require 'auto-complete)
-;; (require 'auto-complete-config)
-;; (ac-config-default)
-;; (require 'auto-complete-c-headers)
-;; (global-auto-complete-mode t)
-;; (define-key ac-completing-map (kbd "C-n") 'ac-next)
-;; (define-key ac-completing-map (kbd "C-p") 'ac-previous)
-;; (set-default 'ac-sources (append ac-sources
-;;              '(ac-source-semantic
-;;                ac-source-dictionary
-;;                ac-source-yasnippet
-;;                ac-source-c-headers
-;;                ac-source-words-in-buffer
-;;                ac-source-words-in-all-buffer
-;;                ac-source-files-in-current-dir
-;;                ac-source-gtags)))
+;; 代码补全的配置
+;; ===================================================
+(require 'company)
+(require 'irony)
+(require 'company-irony)
+(add-hook 'c++-mode-hook 'company-mode)
+(add-hook 'c-mode-hook 'company-mode)
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+(setq company-idle-delay 0)
+(setq company-minimum-prefix-length 2)
+(add-to-list 'company-backends 'company-dabbrev)
+(add-to-list 'company-backends 'company-dabbrev-code)
+(add-to-list 'company-backends 'company-files)
+(add-to-list 'company-backends 'company-semantic)
+(add-to-list 'company-backends 'company-keywords)
+(add-to-list 'company-backends 'company-irony)
+;;(add-to-list 'company-backends 'company-gtags)
+(add-to-list 'company-backends 'company-capf)
+(require 'company-c-headers)
+(add-to-list 'company-c-headers-path-system "/usr/include/c++/4.9.2/")
+(add-to-list 'company-backends 'company-c-headers)
+(global-set-key (kbd "C-;") 'company-complete-common)
+;;使用M-n 和 M-p 选择候选项
+;;company 颜色设置
+(defun theme-dark ()
+  (interactive)
+   (set-face-foreground 'company-tooltip "#000")
+    (set-face-background 'company-tooltip "#fff")
+     (set-face-foreground 'company-scrollbar-bg "#fff")
+      (set-face-background 'company-scrollbar-fg "#999")
+)
+(theme-dark)
+;; ===================================================
 
 ;; ====================== cmode only =======================
 (defun my-c-mode-hook()
@@ -102,31 +119,7 @@
 (set-face-attribute 'tabbar-unselected nil
                     :inherit 'tabbar-default
                     :box '(:line-width 3 :color "gray"))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(c-default-style
-   (quote
-    ((c++-mode . "")
-     (java-mode . "java")
-     (awk-mode . "awk")
-     (other . "gnu"))))
- '(company-backends
-   (quote
-    ((company-gtags company-dabbrev company-dabbrev-code company-files company-semantic company-keywords company-irony company-etags))))
- '(custom-safe-themes
-   (quote
-    ("8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" default)))
- '(ecb-options-version "2.40")
- '(package-selected-packages
-   (quote
-    (find-file-in-project multi-term diminish company-tern yasnippet company-irony irony company helm-gtags helm tabbar stickyfunc-enhance sr-speedbar solarized-theme moe-theme gtags auto-complete-c-headers)))
- '(speedbar-supported-extension-expressions
-   (quote
-    (".[ch]\\(\\+\\+\\|pp\\|c\\|h\\|xx\\)?" ".tex\\(i\\(nfo\\)?\\)?" ".el" ".emacs" ".l" ".lsp" ".p" ".java" ".js" ".f\\(90\\|77\\|or\\)?" ".ad[abs]" ".p[lm]" ".tcl" ".m" ".scm" ".pm" ".py" ".g" ".s?html" ".ma?k" "[Mm]akefile\\(\\.in\\)?" ".go")))
- '(tabbar-separator (quote (1.5))))
+
 
 ;; ======================== ido mode =======================
 ;; ido是Emacs自带的一个很好的补全方式
@@ -227,45 +220,6 @@
 (add-hook 'perl-mode-hook       'hs-minor-mode)
 (add-hook 'sh-mode-hook         'hs-minor-mode)
 (global-set-key (kbd "C-.") 'hs-toggle-hiding)
-
-;; =================== Company ========
-(require 'company)
-;;(require 'irony)
-(add-hook 'c++-mode-hook 'company-mode)
-(setq company-idle-delay 0)
-(setq company-minimum-prefix-length 2)
-(eval-after-load 'company
-  '(add-to-list 'company-backends 'company-irony))
-;;使用M-n 和 M-p 选择候选项
-;;company 颜色设置
-(defun theme-dark ()
- (interactive)
- (set-face-foreground 'company-tooltip "#000")
- (set-face-background 'company-tooltip "#fff")
- (set-face-foreground 'company-scrollbar-bg "#fff")
- (set-face-background 'company-scrollbar-fg "#999")
-)
-(theme-dark)
-
-;; YouCompleteMe
-;;(require 'ycmd)
-;;(add-hook 'after-init-hook #'global-ycmd-mode)
-;;(add-hook 'c++-mode-hook 'ycmd-mode)
-;;(set-variable 'ycmd-server-command '("/usr/ali/python-2.7/bin/python" "/home/admin/jinxin/third/ycmd/ycmd/"))
-;;(require 'company-ycmd)
-;;(company-ycmd-setup)
-;;(add-hook 'after-init-hook #'global-company-mode)
-;;(setq company-idle-delay 0)
-;;(require 'flycheck-ycmd)
-;;(flycheck-ycmd-setup)
-;; (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
-;; (require 'flycheck)
-;; (add-hook 'c-mode-hook #'global-flycheck-mode)
-;; (add-hook 'c++-mode-hook #'global-flycheck-mode)
-;; (setq flycheck-enabled-checkers '(c/c++-gcc))
-;; (add-hook 'c++-mode-hook
-;;           (lambda () (setq flycheck-gcc-warnings nil)))
-;;(add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;; 编译的一些设置
 (global-set-key (kbd "M-m") 'compile)
