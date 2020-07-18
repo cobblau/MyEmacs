@@ -96,6 +96,7 @@
 ;;(global-set-key (kbd "C-h C-f") 'helm-find) ;; C-u C-h C-f 指定要搜索的目录
 (global-set-key (kbd "C-h C-m") 'helm-imenu)
 (global-set-key (kbd "C-h C-o") 'helm-occur)
+(global-set-key (kbd "C-x b") 'helm-buffers-list)
 
 ;;
 ;; helm-projectile
