@@ -162,7 +162,8 @@
 (use-package company
   :ensure t)
 (use-package irony
-  :ensure t)
+  :ensure t
+  :diminish)
 (use-package company-irony
   :ensure t)
 (add-hook 'c++-mode-hook 'company-mode)
