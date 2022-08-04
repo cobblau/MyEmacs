@@ -1,4 +1,4 @@
-;;;; package --- Summary
+;;; package --- Summary
 ;;; Commentary:
 ;;; CobbLiu's  config file
 ;;; Code:
@@ -8,11 +8,14 @@
 
 ;; third party source
 (require 'package)
-;;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-;;(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
-(add-to-list 'package-archives '("marmalade" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/marmalade/"))
-(add-to-list 'package-archives '("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))
-;;(add-to-list 'package-archives '("melpa" . "http://mirrors.cloud.tencent.com/elpa/melpa/"))
+;;(add-to-list 'package-archives '("marmalade" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/marmalade/"))
+;;(add-to-list 'package-archives '("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))
+;; (add-to-list 'package-archives '("melpa" . "http://mirrors.cloud.tencent.com/elpa/melpa/"))
+;; (add-to-list 'package-archives '("marmalade" . "http://mirrors.cloud.tencent.com/elpa/marmalade/"))
+;; (add-to-list 'package-archives '("gnu" . "http://mirrors.cloud.tencent.com/elpa/gnu/"))
+(setq package-archives '(("gnu"   . "http://mirrors.cloud.tencent.com/elpa/gnu/")
+                         ("melpa" . "http://mirrors.cloud.tencent.com/elpa/melpa/")
+			 ("marmalade" . "http://mirrors.cloud.tencent.com/elpa/marmalade/")))
 (package-initialize)
 
 ;;
@@ -22,7 +25,7 @@
 
 ;; 第三方库主题的路径
 ;;(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-(load-theme 'wombat t)
+(load-theme 'solarized-wombat-dark t)
 
 ;;
 ;; Bootstrap `use-package'
@@ -96,7 +99,7 @@
 ;;(global-set-key (kbd "C-h C-f") 'helm-find) ;; C-u C-h C-f 指定要搜索的目录
 (global-set-key (kbd "C-h C-m") 'helm-imenu)
 (global-set-key (kbd "C-h C-o") 'helm-occur)
-(global-set-key (kbd "C-x b") 'helm-buffers-list)
+ (global-set-key (kbd "C-x b") 'helm-buffers-list)
 
 ;;
 ;; helm-projectile
@@ -113,41 +116,22 @@
 (global-set-key (kbd "C-h C-p") 'helm-projectile-find-file-dwim)
 
 ;;
-;; gtags & helm-gtags
+;; helm-gtags
 ;;
-(use-package gtags
-  :ensure t)
 (use-package helm-gtags
   :ensure t)
-(autoload 'gtags-mode "gtags" "" t)
-(add-hook 'c-mode-common-hook 'gtags-mode)
-(add-hook 'c++-mode-common-hook 'gtags-mode)
+(add-hook 'c-mode-hook 'helm-gtags-mode)
+(add-hook 'c++-mode-hook 'helm-gtags-mode)
 (global-set-key (kbd "C-c v") 'helm-gtags-find-rootdir)
 (global-set-key (kbd "C-c C-j") 'helm-gtags-select-tag)
 (global-set-key (kbd "M-.") 'helm-gtags-find-tag)
 (global-set-key (kbd "M-*") 'helm-gtags-pop-stack)
 (global-set-key (kbd "C-c C-r") 'helm-gtags-find-rtag)
 (global-set-key (kbd "C-j") 'helm-gtags-select-tag)
-
-;; gtags自动更新
-;; 代码来源：https://www.emacswiki.org/emacs/GnuGlobal
-(defun gtags-update-single(filename)
-  "Update Gtags database for changes in a single file"
-  (interactive)
-  (start-process "update-gtags" "update-gtags" "bash" "-c" (concat "cd " (gtags-root-dir) " ; gtags --single-update " filename )))
-(defun gtags-update-current-file()
-  (interactive)
-  (defvar filename)
-  (setq filename (replace-regexp-in-string (gtags-root-dir) "." (buffer-file-name (current-buffer))))
-  (gtags-update-single filename)
-  (message "Gtags updated for %s" filename))
-
-(defun gtags-update-hook()
-  "Update GTAGS file incrementally upon saving a file"
-  (when gtags-mode
-    (when (gtags-root-dir)
-      (gtags-update-current-file))))
-(add-hook 'after-save-hook #'gtags-update-hook)
+(custom-set-variables
+ '(helm-gtags-path-style 'relative)
+ '(helm-gtags-ignore-case t)
+  '(helm-gtags-auto-update t))
 
 ;; =================== HideShow Mode
 (add-hook 'c-mode-common-hook   'hs-minor-mode)
@@ -161,16 +145,15 @@
 ;;
 (use-package company
   :ensure t)
-(use-package irony
-  :ensure t
-  :diminish)
-(use-package company-irony
-  :ensure t)
+;;(use-package irony
+;;  :ensure t)
+;;(use-package company-irony
+;;  :ensure t)
 (add-hook 'c++-mode-hook 'company-mode)
 (add-hook 'c-mode-hook 'company-mode)
-(add-hook 'c++-mode-hook 'irony-mode)
-(add-hook 'c-mode-hook 'irony-mode)
-(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+;;(add-hook 'c++-mode-hook 'irony-mode)
+;;(add-hook 'c-mode-hook 'irony-mode)
+;;(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 (setq company-idle-delay 0)
 (setq company-minimum-prefix-length 2)
 (setq company-dabbrev-downcase nil)
@@ -179,7 +162,7 @@
 (add-to-list 'company-backends 'company-files)
 (add-to-list 'company-backends 'company-semantic)
 (add-to-list 'company-backends 'company-keywords)
-(add-to-list 'company-backends 'company-irony)
+;;(add-to-list 'company-backends 'company-irony)
 ;;(add-to-list 'company-backends 'company-gtags)
 (add-to-list 'company-backends 'company-capf)
 (add-to-list 'company-backends 'company-clang)
@@ -264,7 +247,6 @@
 (diminish 'abbrev-mode)
 (diminish 'company-mode)
 (diminish 'helm-mode)
-(diminish 'gtags-mode)
 (diminish 'helm-gtags-mode)
 (diminish 'hs-minor-mode)
 (diminish 'whitespace-mode)
@@ -348,3 +330,14 @@
 
 (provide 'init)
     ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("fee7287586b17efbfda432f05539b58e86e059e78006ce9237b8732fde991b4c" "f5b6be56c9de9fd8bdd42e0c05fecb002dedb8f48a5f00e769370e4517dde0e8" "833ddce3314a4e28411edf3c6efde468f6f2616fc31e17a62587d6a9255f4633" "51ec7bfa54adf5fff5d466248ea6431097f5a18224788d0bd7eb1257a4f7b773" "3e200d49451ec4b8baa068c989e7fba2a97646091fd555eca0ee5a1386d56077" default)))
+ '(package-selected-packages
+   (quote
+    (solarized-theme go-mode company-irony-c-headers irony use-package tabbar sr-speedbar helm-projectile helm-gtags find-file-in-project diminish company-irony company-c-headers))))
